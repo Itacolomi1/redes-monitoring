@@ -1,4 +1,4 @@
-
+var Q = require('q');
 var service = {};
 
 service.list = getAllContainers;
@@ -6,24 +6,36 @@ service.list = getAllContainers;
 module.exports = service;
 
 
-// private url ='localhost:2375/containers/json';
-const url = "viacep.com.br/ws/01001000/json/";
-
+const https = require('http');
 
 function getAllContainers() {
-    try {
-        var XMLHttpRequest = require('xhr2');
-        var xhttp = new XMLHttpRequest();
-        xhttp.open("GET", url, false);
-        xhttp.send();//A execução do script pára aqui até a requisição retornar do servidor
+    var deferred = Q.defer();
 
-        return xhttp.responseText;
-
-    } catch (e) {
-        console.log(e);
+    const options = {        
+        hostname: 'localhost',
+        port: 2375,        
+        path: '/containers/json?all=true',
+        headers: {
+        },
+        method: 'GET',
     }
 
+    const req = https.request(options, res => {
+        console.log(`statusCode: ${res.statusCode}`)
 
+        res.on('data', function (chunk) {
+            debugger;
+             //process.stdout.push(d);
+             var resultado  = chunk;             
+             deferred.resolve(JSON.parse(resultado));
+        })
+    })
+
+    req.on('error', error => {
+        console.error(error)
+    })
+
+    req.end();
+    return deferred.promise;
 }
-
 

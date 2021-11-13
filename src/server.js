@@ -22,7 +22,7 @@ api.use(express.json());
 api.use('/container', require('../controller/api.controller'));
 
 // process.env.PORT é uma variável injetada pelo Azure Web App. Caso ela não exista, será utilizada a porta fixa (6000)
-var apiPort = process.env.PORT || 8080;
+var apiPort = process.env.PORT || 9090;
 
 
 // start server API
