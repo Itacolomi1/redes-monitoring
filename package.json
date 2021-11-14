@@ -4,7 +4,7 @@
   "description": "Exemplo de API em MongoDB",
   "main": "server.js",
   "scripts": {
-    "start": "node src/server.js"
+    "start": "nodemon src/server.js"
   },
   "author": "libras4All",
   "license": "MIT",
@@ -22,5 +22,8 @@
     "rootpath": "^0.1.2",
     "thread-sleep": "^2.2.0",
     "xhr2": "^0.2.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.15"
   }
 }

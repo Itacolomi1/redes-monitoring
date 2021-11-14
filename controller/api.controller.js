@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 var apiservice = require('../services/api.service');
 router.get('/list', getAll)
-
+router.delete("/remove/:id",remove)
 module.exports = router;
 
 function getAll(req, res) {
@@ -20,7 +20,11 @@ function getAll(req, res) {
 
 }
 
-// comentario de alteração
+ async function remove(req, res) {
+    const response = await apiservice.deleteContainer(req.params.id)
+    res.send(response);
+}
+
 
 
 
