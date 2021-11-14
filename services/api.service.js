@@ -3,6 +3,7 @@ var service = {};
 
 service.list = getAllContainers;
 service.listimg= getAllImages;
+service.deleteContainers=deleteAllContainers;
 
 module.exports = service;
 
@@ -59,6 +60,36 @@ function getAllImages() {
             debugger;
              //process.stdout.push(d);
              var resultado  = chunk;             
+             deferred.resolve(JSON.parse(resultado));
+        })
+    })
+
+    req.on('error', error => {
+        console.error(error)
+    })
+
+    req.end();
+    return deferred.promise;
+}
+
+function deleteAllContainers() {
+    var deferred = Q.defer();
+
+    const options = {        
+        hostname: 'localhost',
+        port: 2375,        
+        path: '/containers/prune', 
+        headers: {
+        },
+        method: 'POST',
+    }
+
+    const req = https.request(options, res => {
+        console.log(`statusCode: ${res.statusCode}`)
+
+        res.on('data', function (chunk) {
+            
+                 var resultado  = chunk;             
              deferred.resolve(JSON.parse(resultado));
         })
     })
