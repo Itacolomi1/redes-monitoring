@@ -4,6 +4,7 @@ var service = {};
 service.list = getAllContainers;
 service.deleteImage = deleteImage;
 service.deleteAllImages = deleteAllImages;
+service.pullImage =pullImage;
 
 module.exports = service;
 
@@ -55,8 +56,8 @@ function deleteImage(ID){
     const req = https.request(options, res => {
         console.log(`statusCode: ${res.statusCode}`)
 
-        res.on('data', function (chunk) { 
-            debugger;         
+        res.on('data', function (chunk) {
+                     
              var resultado  = chunk;             
              deferred.resolve(JSON.parse(resultado));
         })
@@ -99,6 +100,38 @@ function deleteAllImages(data){
     });
 
     req.write(tamanho);
+    req.end();
+    return deferred.promise;
+
+}
+
+function pullImage(name){ 
+    
+    var deferred = Q.defer();
+    const options = {        
+        hostname: 'localhost',
+        port: 2375,        
+        path: `/images/create?fromImage=${name}`,
+        headers: {
+            'Content-Type': 'application/json',            
+        },
+        method: 'POST',
+    };
+
+    const req = https.request(options, res => {
+        console.log(`statusCode: ${res.statusCode}`)
+
+        res.on('data', function (chunk) {
+            debugger;                  
+             var resultado  = chunk;             
+             deferred.resolve(JSON.parse(resultado));
+        })
+    });
+
+    req.on('error', error => {
+        console.error(error)
+    });
+    
     req.end();
     return deferred.promise;
 
