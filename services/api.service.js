@@ -2,6 +2,7 @@ var Q = require('q');
 var service = {};
 
 service.list = getAllContainers;
+service.deleteImage = deleteImage;
 
 module.exports = service;
 
@@ -39,5 +40,37 @@ function getAllContainers() {
     return deferred.promise;
 }
 
-//alteração service 
+function deleteImage(ID){
+    debugger;
+    var deferred = Q.defer();
+    const options = {        
+        hostname: 'localhost',
+        port: 2375,        
+        path: `/images/${ID}?force=true`,
+        headers: {
+        },
+        method: 'DELETE',
+    }
+
+    const req = https.request(options, res => {
+        console.log(`statusCode: ${res.statusCode}`)
+
+        res.on('data', function (chunk) { 
+            debugger;         
+             var resultado  = chunk;             
+             deferred.resolve(JSON.parse(resultado));
+        })
+    })
+
+    req.on('error', error => {
+        console.error(error)
+    })
+
+    req.end();
+    return deferred.promise;
+
+}
+
+
+
 
