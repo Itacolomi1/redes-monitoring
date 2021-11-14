@@ -13,14 +13,12 @@ function getAll(req, res) {
         } else {
             res.sendStatus(404);
         }
-
     }).catch(function (err) {
         res.status(400).send(err);
     });
-
 }
 
-// comentario de alteração
+// comentario de alteração 2
 
 
 
