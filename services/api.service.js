@@ -3,6 +3,7 @@ var service = {};
 
 service.list = getAllContainers;
 service.deleteImage = deleteImage;
+service.deleteAllImages = deleteAllImages;
 
 module.exports = service;
 
@@ -40,8 +41,7 @@ function getAllContainers() {
     return deferred.promise;
 }
 
-function deleteImage(ID){
-    debugger;
+function deleteImage(ID){   
     var deferred = Q.defer();
     const options = {        
         hostname: 'localhost',
@@ -66,6 +66,39 @@ function deleteImage(ID){
         console.error(error)
     })
 
+    req.end();
+    return deferred.promise;
+
+}
+
+function deleteAllImages(data){ 
+    let tamanho = JSON.stringify(data); 
+    var deferred = Q.defer();
+    const options = {        
+        hostname: 'localhost',
+        port: 2375,        
+        path: `/images/prune?filters=[{"dangling":false}]`,
+        headers: {
+            'Content-Type': 'application/json',            
+        },
+        method: 'POST',
+    };
+
+    const req = https.request(options, res => {
+        console.log(`statusCode: ${res.statusCode}`)
+
+        res.on('data', function (chunk) {
+            debugger;                  
+             var resultado  = chunk;             
+             deferred.resolve(JSON.parse(resultado));
+        })
+    });
+
+    req.on('error', error => {
+        console.error(error)
+    });
+
+    req.write(tamanho);
     req.end();
     return deferred.promise;
 

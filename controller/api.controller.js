@@ -3,6 +3,7 @@ var router = express.Router();
 var apiservice = require('../services/api.service');
 router.get('/list', getAll);
 router.delete('/imagem/delete/:_id', deleteImage);
+router.post('/imagem/deleteAll', deleteAllImage);
 
 module.exports = router;
 
@@ -35,6 +36,20 @@ function deleteImage(req,res) {
     });    
 }
 
+function deleteAllImage(req,res) {
+
+    debugger;
+    apiservice.deleteAllImages(req.body).then((data)=>{
+        if (data) {
+            res.send(data);
+        } else {
+            res.sendStatus(404);
+        }
+
+    }).catch(function (err) {
+        res.status(400).send(err);
+    });    
+}
 
 
 
