@@ -46,7 +46,7 @@ function getAllContainers() {
 }
 
 
-function deleteImage(ID){   
+ function deleteImage(ID){   
     var deferred = Q.defer();
     const options = {        
         hostname: 'localhost',
@@ -106,37 +106,26 @@ function getAllImages() {
 
 }
 
-function deleteAllImages(data){ 
-    let tamanho = JSON.stringify(data); 
+  function deleteAllImages(){ 
+    //let listaImages = [];
     var deferred = Q.defer();
-    const options = {        
-        hostname: 'localhost',
-        port: 2375,        
-        path: `/images/prune?filters=[{"dangling":false}]`,
-        headers: {
-            'Content-Type': 'application/json',            
-        },
-        method: 'POST',
-    };
 
-    const req = https.request(options, res => {
-        console.log(`statusCode: ${res.statusCode}`)
+    getAllImages().then((data)=>{
+        if(data){
+            deferred.resolve(true);
+            data.forEach((item,index)=>{
 
-        res.on('data', function (chunk) {
-            debugger;                  
-             var resultado  = chunk;             
-             deferred.resolve(JSON.parse(resultado));
-        })
+                deleteImage(getID(item.Id)).then((data)=>{
+                    if(data){
+                        console.log(item.Id + "Foi deletada");
+                    }
+                })                
+            })
+        }
+        else{deferred.resolve(false);}
+
     });
-
-    req.on('error', error => {
-        console.error(error)
-    });
-
-    req.write(tamanho);
-    req.end();
     return deferred.promise;
-
 }
 
 function pullImage(name){ 
@@ -198,6 +187,12 @@ function deleteAllContainers() {
 
     req.end();
     return deferred.promise;
+}
+
+
+function getID(quaseID){
+    return quaseID.substring(7);
+
 }
 
 

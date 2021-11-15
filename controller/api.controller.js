@@ -76,7 +76,7 @@ function deleteAllCont(req, res) {
     });    
 }
 
-function deleteAllImage(req,res) {
+async function deleteAllImage(req,res) {
    
     apiservice.deleteAllImages(req.body).then((data)=>{
         if (data) {
@@ -103,6 +103,7 @@ function pullImage(req,res) {
         res.status(400).send(err);
     });    
 }
+
 
 
 
