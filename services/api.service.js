@@ -5,6 +5,9 @@ service.list = getAllContainers;
 service.deleteImage = deleteImage;
 service.deleteAllImages = deleteAllImages;
 service.pullImage =pullImage;
+service.listimg= getAllImages;
+service.deleteContainers=deleteAllContainers;
+
 
 module.exports = service;
 
@@ -42,6 +45,7 @@ function getAllContainers() {
     return deferred.promise;
 }
 
+
 function deleteImage(ID){   
     var deferred = Q.defer();
     const options = {        
@@ -56,8 +60,7 @@ function deleteImage(ID){
     const req = https.request(options, res => {
         console.log(`statusCode: ${res.statusCode}`)
 
-        res.on('data', function (chunk) {
-                     
+        res.on('data', function (chunk) {            
              var resultado  = chunk;             
              deferred.resolve(JSON.parse(resultado));
         })
@@ -69,6 +72,37 @@ function deleteImage(ID){
 
     req.end();
     return deferred.promise;
+}
+
+
+function getAllImages() {
+    var deferred = Q.defer();
+
+    const options = {        
+        hostname: 'localhost',
+        port: 2375,        
+        path: '/images/json?all=true',
+        headers: {
+        },
+        method: 'GET',
+    }
+
+    const req = https.request(options, res => {
+        console.log(`statusCode: ${res.statusCode}`)
+
+        res.on('data', function (chunk) {
+             var resultado  = chunk;             
+             deferred.resolve(JSON.parse(resultado));
+        })
+    })
+
+    req.on('error', error => {
+        console.error(error)
+    })
+
+    req.end();
+    return deferred.promise;
+
 
 }
 
@@ -121,8 +155,7 @@ function pullImage(name){
     const req = https.request(options, res => {
         console.log(`statusCode: ${res.statusCode}`)
 
-        res.on('data', function (chunk) {
-            debugger;                  
+        res.on('data', function (chunk) {                           
              var resultado  = chunk;             
              deferred.resolve(JSON.parse(resultado));
         })
@@ -137,6 +170,34 @@ function pullImage(name){
 
 }
 
+function deleteAllContainers() {
+    var deferred = Q.defer();
 
+    const options = {        
+        hostname: 'localhost',
+        port: 2375,        
+        path: '/containers/prune', 
+        headers: {
+        },
+        method: 'POST',
+    }
+    const req = https.request(options, res => {
+        console.log(`statusCode: ${res.statusCode}`)
+
+        res.on('data', function (chunk) {
+
+            
+                 var resultado  = chunk;             
+             deferred.resolve(JSON.parse(resultado));
+        })
+    })
+
+    req.on('error', error => {
+        console.error(error)
+    })
+
+    req.end();
+    return deferred.promise;
+}
 
 
